@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "CommonJS",
+    "lib": [
+      "es2022",
+      "DOM"
+    ],
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "types": [
+      "node"
+    ],
+    "baseUrl": "."
+  },
+  "include": [
+    "src"
+  ]
+}
