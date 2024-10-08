@@ -10,8 +10,8 @@ export type ZodObjectOneFieldSchema<T extends ZodRawShape> = {
 
 export type ZodObjectOneField<T extends ZodRawShape> = {
   type: "object";
-  schema: ZodObjectOneFieldSchema<T>;
   required: true;
+  schema: T extends {} ? undefined : ZodObjectOneFieldSchema<T>;
 };
 
 export const convertObjectSchema = <Schema extends ZodRawShape>(
@@ -19,18 +19,21 @@ export const convertObjectSchema = <Schema extends ZodRawShape>(
   ref: Ref,
   opts: Opts,
 ): ZodToOneField<ZodObject<Schema>> => {
-  const schema = Object.entries(zodSchema._def.shape()).reduce(
-    (acc, [propName, zodSchema]) => {
-      return {
-        ...acc,
-        [propName]: convertZodSchemaToField(
-          zodSchema as ZodTypeAny,
-          { ...ref, currentPath: [...ref.currentPath, propName] },
-          opts,
-        ),
-      };
-    },
-    {} as ZodObjectOneFieldSchema<Schema>,
-  );
-  return { type: "object", schema, required: true };
+  const shape = zodSchema._def.shape();
+  if (Object.keys(shape).length === 0) {
+    return { type: "object", required: true, schema: undefined };
+  }
+  const schema = Object.entries(shape).reduce((acc, [propName, zodSchema]) => {
+    return {
+      ...acc,
+      [propName]: convertZodSchemaToField(
+        zodSchema as ZodTypeAny,
+        { ...ref, currentPath: [...ref.currentPath, propName] },
+        opts,
+      ),
+    };
+  }, {} as ZodObjectOneFieldSchema<Schema>);
+  return { type: "object", schema, required: true } as ZodToOneField<
+    ZodObject<Schema>
+  >;
 };

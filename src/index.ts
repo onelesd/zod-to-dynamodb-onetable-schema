@@ -61,7 +61,7 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodEffects:
     case ZodFirstPartyTypeKind.ZodNativeEnum:
     case ZodFirstPartyTypeKind.ZodOptional:
-      return convertOptionalSchema;
+      return convertOptionalSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNullable:
       return convertNullableSchema;
     case ZodFirstPartyTypeKind.ZodDefault:
@@ -106,29 +106,40 @@ export const createModelSchema = <T extends ZodRawShape>(
   );
 };
 
-const accountMod = createModelSchema(
-  z.object({
-    hi: z.string(),
-    other: z.boolean(),
-    obj: z.object({ nested: z.object({ string: z.boolean() }) }).optional(),
-  }),
-  {},
-);
-
-const table = new Table({
-  name: "test",
-  schema: {
-    version: "onetable:0",
-    indexes: { primary: { hash: "pk", sort: "sk" } },
-    models: { Account: accountMod, Other: { hi: { type: "string" } } },
-  },
-  partial: false,
-});
-
-const accountModel = table.getModel("Account");
-const account = accountModel.create({
-  hi: "hello",
-  other: true,
-  obj: { nested: { string: true } },
-});
-account.then((res) => res.obj.nested.string);
+// const accountModelSchema = z.object({
+//   hi: z.string(),
+//   other: z.boolean(),
+//   obj: z.object({}),
+// });
+//
+// const accountMod = createModelSchema(accountModelSchema, {});
+// console.log(accountMod);
+//
+// const table = new Table({
+//   name: "test",
+//   schema: {
+//     version: "onetable:0",
+//     indexes: { primary: { hash: "pk", sort: "sk" } },
+//     models: {
+//       Account: accountMod,
+//       Other: {
+//         hi: {
+//           type: "object",
+//           required: true,
+//           schema: { test: { type: "string", required: true } },
+//         },
+//       },
+//     },
+//   },
+//   partial: false,
+// });
+//
+// type Account = z.infer<typeof accountModelSchema>;
+//
+// const accountModel = table.getModel("Account");
+// const account = accountModel.create({
+//   hi: "hello",
+//   other: true,
+//   obj: { nested: { test: "value" } },
+// });
+// account.then((res) => res.obj.nested.string);

@@ -6,6 +6,19 @@ const mockOpts = {};
 const mockRefs = { currentPath: ["hello"] };
 
 describe("convertObjectSchema", () => {
+  it("should return schemaless object if no keys supplied", () => {
+    // Assemble
+    const zodObjectSchema = z.object({});
+
+    // Act
+    const onefield = convertObjectSchema(zodObjectSchema, mockRefs, mockOpts);
+
+    expect(onefield).toEqual({
+      type: "object",
+      required: true,
+    });
+  });
+
   it("should return all keys with their own onefield schemas filled in", () => {
     // Assemble
     const zodObjectSchema = z.object({
