@@ -1,13 +1,11 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { convertNumberSchema } from "../../src/converters/number";
 
 const mockOpts = {};
 const mockRefs = { currentPath: ["hello"] };
 
-describe("convertOptionalSchema", () => {
-  afterEach(() => vi.resetAllMocks());
-
+describe("convertNumberSchema", () => {
   it("should return required number field", () => {
     // Assemble
     const zodNumberSchema = z.number();

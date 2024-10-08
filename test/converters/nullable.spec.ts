@@ -1,25 +1,25 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { convertOptionalSchema } from "../../src/converters/optional";
+import { convertNullableSchema } from "../../src/converters/nullable";
 
 const mockOpts = {};
 const mockRefs = { currentPath: ["hello"] };
 
-describe("convertOptionalSchema", () => {
+describe("convertNullableSchema", () => {
   afterEach(() => vi.resetAllMocks());
 
   it("should set required to false for the inner type and return it", () => {
     // Assemble
-    const zodOptionalSchema = z.number().optional();
+    const zodNullableSchema = z.number().nullable();
 
     // Act
-    const onefield = convertOptionalSchema(
-      zodOptionalSchema,
+    const onefield = convertNullableSchema(
+      zodNullableSchema,
       mockRefs,
       mockOpts,
     );
 
     // Assert
-    expect(onefield).toEqual({ type: "number", required: undefined });
+    expect(onefield).toEqual({ type: "number", required: false });
   });
 });

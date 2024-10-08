@@ -2,89 +2,87 @@ import { Table, type OneField, type OneModel } from "dynamodb-onetable";
 import {
   z,
   ZodFirstPartyTypeKind,
-  ZodNullable,
   ZodObject,
   ZodRawShape,
   ZodSchema,
-  ZodTypeAny,
 } from "zod";
-import { Opts, Ref, ZodToOneFieldConverter } from "./converter-types";
-import { assertType } from "./assertions";
+import { Opts, Ref, ZodToOneField } from "./converter-types";
 import { convertStringSchema } from "./converters/string";
 import { convertOptionalSchema } from "./converters/optional";
 import { convertNumberSchema } from "./converters/number";
+import { convertNullableSchema } from "./converters/nullable";
 import {
   convertObjectSchema,
   ZodObjectOneFieldSchema,
 } from "./converters/object";
+import { convertBooleanSchema } from "./converters/boolean";
 
-const convertNullableSchema: ZodToOneFieldConverter = (
-  zodSchema,
-  ref,
-  opts,
-) => {
-  assertType<ZodNullable<ZodTypeAny>>(
-    zodSchema,
-    ZodFirstPartyTypeKind.ZodNullable,
-  );
-  const innerField = convertZodSchemaToField(
-    zodSchema._def.innerType,
-    ref,
-    opts,
-  );
-  return { ...innerField, required: false };
-};
-
-// TODO: Remove partial
-const converterMap = {
-  [ZodFirstPartyTypeKind.ZodString]: convertStringSchema,
-  [ZodFirstPartyTypeKind.ZodNumber]: convertNumberSchema,
-  [ZodFirstPartyTypeKind.ZodObject]: convertObjectSchema,
-  // [ZodFirstPartyTypeKind.ZodBigInt]: parseBigintDef,
-  // [ZodFirstPartyTypeKind.ZodBoolean]: parseBooleanDef,
-  // [ZodFirstPartyTypeKind.ZodDate]: parseDateDef,
-  // [ZodFirstPartyTypeKind.ZodUndefined]: parseUndefinedDef,
-  // [ZodFirstPartyTypeKind.ZodNull]: parseNullDef,
-  // [ZodFirstPartyTypeKind.ZodArray]: parseArrayDef,
-  // [ZodFirstPartyTypeKind.ZodUnion]: parseUnionDef,
-  // [ZodFirstPartyTypeKind.ZodDiscriminatedUnion]: parseUnionDef,
-  // [ZodFirstPartyTypeKind.ZodIntersection]: parseIntersectionDef,
-  // [ZodFirstPartyTypeKind.ZodTuple]: parseTupleDef,
-  // [ZodFirstPartyTypeKind.ZodRecord]: parseRecordDef,
-  // [ZodFirstPartyTypeKind.ZodLiteral]: parseLiteralDef,
-  // [ZodFirstPartyTypeKind.ZodEnum]: parseEnumDef,
-  // [ZodFirstPartyTypeKind.ZodNativeEnum]: parseNativeEnumDef,
-  [ZodFirstPartyTypeKind.ZodNullable]: convertNullableSchema,
-  [ZodFirstPartyTypeKind.ZodOptional]: convertOptionalSchema,
-  // [ZodFirstPartyTypeKind.ZodMap]: parseMapDef,
-  // [ZodFirstPartyTypeKind.ZodSet]: parseSetDef,
-  // [ZodFirstPartyTypeKind.ZodLazy]: parseDef,
-  // [ZodFirstPartyTypeKind.ZodPromise]: parsePromiseDef,
-  // [ZodFirstPartyTypeKind.ZodNaN]: parseNeverDef,
-  // [ZodFirstPartyTypeKind.ZodNever]: parseNeverDef,
-  // [ZodFirstPartyTypeKind.ZodEffects]: parseEffectsDef,
-  // [ZodFirstPartyTypeKind.ZodAny]: parseAnyDef,
-  // [ZodFirstPartyTypeKind.ZodUnknown]: parseUnknownDef,
-  // [ZodFirstPartyTypeKind.ZodDefault]: parseDefaultDef,
-  // [ZodFirstPartyTypeKind.ZodBranded]: parseBrandedDef,
-  // [ZodFirstPartyTypeKind.ZodReadonly]: parseReadonlyDef,
-  // [ZodFirstPartyTypeKind.ZodCatch]: parseCatchDef,
-  // [ZodFirstPartyTypeKind.ZodPipeline]: parsePipelineDef,
-  // [ZodFirstPartyTypeKind.ZodFunction]: undefined,
-  // [ZodFirstPartyTypeKind.ZodVoid]: undefined,
-  // [ZodFirstPartyTypeKind.ZodSymbol]: undefined;
-};
-
-export const convertZodSchemaToField = (
-  zodSchema: ZodSchema,
+type ConverterFunction = <T extends ZodSchema>(
+  schema: ZodSchema,
   ref: Ref,
   opts: Opts,
-): OneField => {
-  const zodFirstPartyTypeKind = (
-    zodSchema._def as Record<string, ZodFirstPartyTypeKind>
-  )?.typeName;
-  // TODO: Parse that a ZodFirstPartyTypeKind is returned
-  const converterFunction = converterMap[zodFirstPartyTypeKind];
+) => ZodToOneField<T>;
+const getConverterFunction = <T extends ZodSchema>(
+  zodSchema: T,
+): ConverterFunction => {
+  const zodType = (zodSchema._def as Record<string, ZodFirstPartyTypeKind>)
+    ?.typeName;
+  switch (zodType) {
+    case ZodFirstPartyTypeKind.ZodString:
+      return convertStringSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodNumber:
+      return convertNumberSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodNaN:
+    case ZodFirstPartyTypeKind.ZodBigInt:
+    case ZodFirstPartyTypeKind.ZodBoolean:
+      return convertBooleanSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodDate:
+    case ZodFirstPartyTypeKind.ZodSymbol:
+    case ZodFirstPartyTypeKind.ZodUndefined:
+    case ZodFirstPartyTypeKind.ZodNull:
+    case ZodFirstPartyTypeKind.ZodAny:
+    case ZodFirstPartyTypeKind.ZodUnknown:
+    case ZodFirstPartyTypeKind.ZodNever:
+    case ZodFirstPartyTypeKind.ZodVoid:
+    case ZodFirstPartyTypeKind.ZodArray:
+    case ZodFirstPartyTypeKind.ZodObject:
+      return convertObjectSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodUnion:
+    case ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
+    case ZodFirstPartyTypeKind.ZodIntersection:
+    case ZodFirstPartyTypeKind.ZodTuple:
+    case ZodFirstPartyTypeKind.ZodRecord:
+    case ZodFirstPartyTypeKind.ZodMap:
+    case ZodFirstPartyTypeKind.ZodSet:
+    case ZodFirstPartyTypeKind.ZodFunction:
+    case ZodFirstPartyTypeKind.ZodLazy:
+    case ZodFirstPartyTypeKind.ZodLiteral:
+    case ZodFirstPartyTypeKind.ZodEnum:
+    case ZodFirstPartyTypeKind.ZodEffects:
+    case ZodFirstPartyTypeKind.ZodNativeEnum:
+    case ZodFirstPartyTypeKind.ZodOptional:
+      return convertOptionalSchema;
+    case ZodFirstPartyTypeKind.ZodNullable:
+      return convertNullableSchema;
+    case ZodFirstPartyTypeKind.ZodDefault:
+    case ZodFirstPartyTypeKind.ZodCatch:
+    case ZodFirstPartyTypeKind.ZodPromise:
+    case ZodFirstPartyTypeKind.ZodBranded:
+    case ZodFirstPartyTypeKind.ZodPipeline:
+    case ZodFirstPartyTypeKind.ZodReadonly:
+    default:
+      return (_: ZodSchema, __: Ref, ___: undefined) => {
+        throw new Error("Data type is not supported by `dynamodb-onetable`");
+      };
+  }
+};
+
+export const convertZodSchemaToField = <T extends ZodSchema>(
+  zodSchema: T,
+  ref: Ref,
+  opts: Opts,
+): ZodToOneField<T> => {
+  const converterFunction = getConverterFunction(zodSchema);
   return converterFunction(zodSchema, ref, opts);
 };
 
@@ -111,8 +109,8 @@ export const createModelSchema = <T extends ZodRawShape>(
 const accountMod = createModelSchema(
   z.object({
     hi: z.string(),
-    other: z.number(),
-    obj: z.object({ nested: z.object({ string: z.string() }) }),
+    other: z.boolean(),
+    obj: z.object({ nested: z.object({ string: z.boolean() }) }).optional(),
   }),
   {},
 );
@@ -122,11 +120,15 @@ const table = new Table({
   schema: {
     version: "onetable:0",
     indexes: { primary: { hash: "pk", sort: "sk" } },
-    models: { Account: accountMod },
+    models: { Account: accountMod, Other: { hi: { type: "string" } } },
   },
   partial: false,
 });
 
 const accountModel = table.getModel("Account");
-const account = accountModel.create({ hi: "hello", other: 9 });
+const account = accountModel.create({
+  hi: "hello",
+  other: true,
+  obj: { nested: { string: true } },
+});
 account.then((res) => res.obj.nested.string);

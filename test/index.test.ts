@@ -1,5 +1,5 @@
-import { expect, it } from "vitest";
+import { it } from "vitest";
+import { convertZodSchemaToField } from "../src/index.ts";
+import { z } from "zod";
 
-it("should pass", () => {
-  expect(true).toBe(true);
-});
+it("should pass", () => { });

@@ -1,10 +1,12 @@
-import { assertType } from "src/assertions";
-import { ZodToOneFieldConverter } from "src/converter-types";
-import { ZodFirstPartyTypeKind, ZodNumber } from "zod";
-
-export const convertNumberSchema: ZodToOneFieldConverter = (zodSchema) => {
-  assertType<ZodNumber>(zodSchema, ZodFirstPartyTypeKind.ZodNumber);
-  return { type: "number", required: true };
-};
+import { Opts, Ref, ZodToOneField } from "src/converter-types";
+import { ZodNumber } from "zod";
 
 export type ZodNumberOneField = { type: "number"; required: true };
+
+export const convertNumberSchema = (
+  _: ZodNumber,
+  __: Ref,
+  ___: Opts,
+): ZodToOneField<ZodNumber> => {
+  return { type: "number", required: true };
+};

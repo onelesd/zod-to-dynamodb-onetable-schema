@@ -1,11 +1,11 @@
-import {
-  ZodFirstPartyTypeKind,
-  ZodString,
-  ZodStringCheck,
-  ZodStringDef,
-} from "zod";
-import { Opts, Ref, ZodToOneFieldConverter } from "../converter-types";
-import { assertType } from "../assertions";
+import { ZodString, ZodStringCheck, ZodStringDef } from "zod";
+import { Opts, Ref, ZodToOneField } from "../converter-types";
+
+export type ZodStringOneField = {
+  type: "string";
+  required: true;
+  validate?: string;
+};
 
 export const zodStringCheckPatterns: Partial<
   Record<ZodStringCheck["kind"], RegExp>
@@ -55,12 +55,11 @@ const getStringValidators = (
   return validators;
 };
 
-export const convertStringSchema: ZodToOneFieldConverter = (
-  zodSchema,
-  ref,
-  opts,
-) => {
-  assertType<ZodString>(zodSchema, ZodFirstPartyTypeKind.ZodString);
+export const convertStringSchema = (
+  zodSchema: ZodString,
+  ref: Ref,
+  opts: Opts,
+): ZodToOneField<ZodString> => {
   const validators = getStringValidators(zodSchema._def, ref, opts);
   const validator = validators[0];
   if (validators?.length > 1) {
@@ -73,10 +72,4 @@ export const convertStringSchema: ZodToOneFieldConverter = (
     required: true,
     validate: validator?.regex ? validator.regex.toString() : undefined,
   };
-};
-
-export type ZodStringOneField = {
-  type: "string";
-  required: true;
-  validate?: string;
 };
