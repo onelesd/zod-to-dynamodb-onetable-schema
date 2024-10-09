@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  afterEach,
+  beforeEach,
+  beforeAll,
+  afterAll,
+} from "vitest";
 import { Table } from "dynamodb-onetable";
 import { createModelSchema } from "../src";
 import { z } from "zod";
@@ -30,16 +38,25 @@ describe("createModelSchema", () => {
     params: { isoDates: false, timestamps: true, null: true },
   });
 
+  enum ValidEnum {
+    TEST = "TEST",
+    DEFAULT = "DEFAULT",
+  }
+
   const exampleModelSchema = z.object({
-    pk: z.string(),
-    sk: z.string(),
-    string: z.string(),
-    number: z.number(),
-    date: z.date(),
+    pk: z.string().default("using-default-values"),
+    sk: z.string().default("VALUE"),
+    string: z.string().default("default-string"),
+    number: z.number().default(3),
+    date: z.date().default(new Date("2020-01-01")),
+    array: z.array(z.number()).default([5]),
+    enum: z.enum(["hello", "world"]).default("hello"),
+    nativeEnum: z.nativeEnum(ValidEnum).default(ValidEnum.DEFAULT),
+    set: z.set(z.string()).default(new Set(["default", "set"])),
   });
 
   const table = new Table({
-    name: "BasicTable",
+    name: "TestTable",
     client: ClientV3,
     partial: true,
     schema: makeZodSchema({
@@ -54,29 +71,60 @@ describe("createModelSchema", () => {
     }
   });
 
-  it("test dynamo", async () => {
+  afterAll(async () => {
+    if (!(await table.exists())) {
+      await table.deleteTable("DeleteTableForever");
+      expect(await table.exists()).toBe(false);
+    }
+  });
+
+  it("test dynamo upsert and get", async () => {
     // Assemble
     const exampleModel = table.getModel("Example");
 
     // Act
-    await exampleModel.upsert({
-      pk: "1",
-      sk: "2",
+    const inMemoryRecord: z.infer<typeof exampleModelSchema> = {
+      pk: "setting-values-manually",
+      sk: "VALUE",
       string: "test",
       number: 1,
       date: new Date("2024-01-01"),
+      nativeEnum: ValidEnum.TEST,
+      enum: "world",
+      array: [0],
+      set: new Set(["hello", "world"]),
+    };
+    await exampleModel.upsert(inMemoryRecord);
+    const exampleRecord = await exampleModel.get(inMemoryRecord);
+
+    // Assert
+    expect(exampleRecord).toMatchObject(inMemoryRecord);
+    expect(exampleModelSchema.safeParse(exampleRecord).success).toBe(true);
+  });
+
+  it("test that upsert is operational relying on defaults", async () => {
+    // Assemble
+    const exampleModel = table.getModel("Example");
+
+    // Act
+    await exampleModel.upsert({});
+    const exampleRecord = await exampleModel.get({
+      pk: "using-default-values",
+      sk: "VALUE",
     });
-    const exampleRecord = await exampleModel.get({ pk: "1", sk: "2" });
 
     // Assert
     expect(exampleRecord).toMatchObject({
-      pk: "1",
-      sk: "2",
-      string: "test",
-      number: 1,
-      date: new Date("2024-01-01T00:00:00.000Z"),
+      pk: "using-default-values",
+      sk: "VALUE",
+      string: "default-string",
+      number: 3,
+      date: new Date("2020-01-01"),
+      array: [5],
+      enum: "hello",
+      nativeEnum: ValidEnum.DEFAULT,
+      set: new Set(["default", "set"]),
     });
-    console.log(exampleRecord);
     expect(exampleModelSchema.safeParse(exampleRecord).success).toBe(true);
   });
 });

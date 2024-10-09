@@ -3,10 +3,13 @@ import {
   ZodArray,
   ZodBoolean,
   ZodDate,
+  ZodDefault,
   ZodEnum,
+  ZodNativeEnum,
   ZodNumber,
   ZodObject,
   ZodOptional,
+  ZodSet,
   ZodString,
   ZodTypeAny,
 } from "zod";
@@ -18,6 +21,9 @@ import { ZodBooleanOneField } from "./converters/boolean";
 import { ZodDateOneField } from "./converters/date";
 import { ZodArrayOneField } from "./converters/array";
 import { ZodEnumOneField } from "./converters/enum";
+import { ZodSetOneField } from "./converters/set";
+import { ZodNativeEnumOneField } from "./converters/native-enum";
+import { ZodDefaultOneField } from "./converters/default";
 
 export type Ref = { currentPath: string[] };
 export type Opts = { logger?: Logger };
@@ -38,4 +44,10 @@ export type ZodToOneField<T extends ZodTypeAny> = T extends ZodString
   ? ZodOptionalOneField<Schema>
   : T extends ZodEnum<infer Enum>
   ? ZodEnumOneField<Enum>
+  : T extends ZodNativeEnum<infer Enum>
+  ? ZodNativeEnumOneField<Enum>
+  : T extends ZodSet<infer Schema>
+  ? ZodSetOneField
+  : T extends ZodDefault<infer Schema>
+  ? ZodDefaultOneField<Schema>
   : never;

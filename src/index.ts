@@ -19,12 +19,16 @@ import { convertBooleanSchema } from "./converters/boolean";
 import { convertDateSchema } from "./converters/date";
 import { convertArraySchema } from "./converters/array";
 import { convertEnumSchema } from "./converters/enum";
+import { convertSetSchema } from "./converters/set";
+import { convertNativeEnumSchema } from "./converters/native-enum";
+import { convertDefaultSchema } from "./converters/default";
 
 type ConverterFunction = <T extends ZodSchema>(
   schema: ZodSchema,
   ref: Ref,
   opts: Opts,
 ) => ZodToOneField<T>;
+
 const getConverterFunction = <T extends ZodSchema>(
   zodSchema: T,
 ): ConverterFunction => {
@@ -49,13 +53,16 @@ const getConverterFunction = <T extends ZodSchema>(
       return convertArraySchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodEnum:
       return convertEnumSchema as ConverterFunction;
-    case ZodFirstPartyTypeKind.ZodLiteral:
-    case ZodFirstPartyTypeKind.ZodDefault:
     case ZodFirstPartyTypeKind.ZodNativeEnum:
+      return convertNativeEnumSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodSet:
+      return convertSetSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodDefault:
+      return convertDefaultSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodLiteral:
     case ZodFirstPartyTypeKind.ZodNull:
     case ZodFirstPartyTypeKind.ZodRecord:
     case ZodFirstPartyTypeKind.ZodMap:
-    case ZodFirstPartyTypeKind.ZodSet:
     case ZodFirstPartyTypeKind.ZodTuple:
     case ZodFirstPartyTypeKind.ZodNaN:
     case ZodFirstPartyTypeKind.ZodBigInt:
@@ -78,9 +85,12 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodReadonly:
     default:
       return (schema: ZodSchema, ref: Ref, ___: Opts) => {
-        throw new Error("Data type is not supported by `dynamodb-onetable`", {
-          cause: { schema, ref },
-        });
+        throw new Error(
+          `${zodType} type is not supported by \`dynamodb-onetable\``,
+          {
+            cause: { schema, ref },
+          },
+        );
       };
   }
 };
@@ -113,48 +123,3 @@ export const createModelSchema = <T extends ZodRawShape>(
     {} as ZodObjectOneFieldSchema<T>,
   );
 };
-
-// const accountModelSchema = z.object({
-//   hi: z.string(),
-//   other: z.boolean(),
-//   obj: z.object({
-//     enum: z.enum(["val1", "hippo"]),
-//   }),
-// });
-//
-// const accountMod = createModelSchema(accountModelSchema, {});
-// console.log(accountMod);
-//
-// const table = new Table({
-//   name: "test",
-//   schema: {
-//     version: "onetable:0",
-//     indexes: { primary: { hash: "pk", sort: "sk" } },
-//     models: {
-//       Account: accountMod,
-//       Other: {
-//         family: {
-//           type: String,
-//           enum: ["metrics", "events", "logs", "recommendations", "relay"],
-//           required: true,
-//         },
-//       },
-//     },
-//   },
-//   partial: false,
-// });
-//
-// type Account = z.infer<typeof accountModelSchema>;
-// const input: Account = {
-//   hi: "hello",
-//   other: true,
-// };
-//
-// const accountModel = table.getModel("Account");
-// const account = accountModel.upsert({ obj: { enum: "val1" } });
-// account.then((res) => {
-//   const t = res.array[0];
-// });
-//
-// const otherModel = table.getModel("Other");
-// const other = otherModel.upsert({ family: "" });

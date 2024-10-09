@@ -15,6 +15,7 @@
     "baseUrl": "."
   },
   "include": [
-    "src"
+    "src",
+    "test"
   ]
 }
