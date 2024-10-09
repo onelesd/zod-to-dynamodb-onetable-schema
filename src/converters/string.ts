@@ -1,5 +1,5 @@
 import { ZodString, ZodStringCheck, ZodStringDef } from "zod";
-import { Opts, Ref, ZodToOneField } from "../converter-types";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 
 export type ZodStringOneField = {
   type: "string";
@@ -41,7 +41,7 @@ const getStringValidators = (
         case "endsWith":
           return { kind: check.kind, regex: RegExp(`${check.value}$`) };
         default:
-          opts.logger?.warn(
+          opts.logger?.debug(
             `Your schema defines a string ${check.kind} check at \`${ref.currentPath.join(".")}\` which is unsupported by this library`,
           );
           return { kind: check.kind, regex: undefined };
@@ -63,7 +63,7 @@ export const convertStringSchema = (
   const validators = getStringValidators(zodSchema._def, ref, opts);
   const validator = validators[0];
   if (validators?.length > 1) {
-    opts.logger?.warn(
+    opts.logger?.debug(
       `This schema defines multiple checks at \`${ref.currentPath.join(".")}\`, but only one can be used, selecting first check: ${validator.kind}`,
     );
   }

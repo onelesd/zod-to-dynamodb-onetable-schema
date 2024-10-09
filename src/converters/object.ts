@@ -1,5 +1,5 @@
 import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-types";
+import { Opts, Ref, ZodToOneField } from "src/converter-type";
 import { ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 
 export type ZodObjectOneFieldSchema<T extends ZodRawShape> = {
@@ -11,7 +11,7 @@ export type ZodObjectOneFieldSchema<T extends ZodRawShape> = {
 export type ZodObjectOneField<T extends ZodRawShape> = {
   type: "object";
   required: true;
-  schema: T extends {} ? undefined : ZodObjectOneFieldSchema<T>;
+  schema: keyof T extends never ? undefined : ZodObjectOneFieldSchema<T>;
 };
 
 export const convertObjectSchema = <Schema extends ZodRawShape>(

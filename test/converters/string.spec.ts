@@ -106,7 +106,7 @@ describe("convertStringSchema", () => {
     "trim",
   ];
   it.each(unsupportedFormats)(
-    "should warn via logger if unsupported `%s` check is requested",
+    "should debug via logger if unsupported `%s` check is requested",
     (kind) => {
       // Assemble
       const stringSchemaBase = z.string();
@@ -123,13 +123,13 @@ describe("convertStringSchema", () => {
         type: "string",
         required: true,
       });
-      expect(mockLogger.warn.mock.lastCall).toEqual([
+      expect(mockLogger.debug.mock.lastCall).toEqual([
         `Your schema defines a string ${kind} check at \`hello\` which is unsupported by this library`,
       ]);
     },
   );
 
-  it("should warn via logger if multiple competing validators used", () => {
+  it("should debug via logger if multiple competing validators used", () => {
     // Assemble
     const zodStringSchema = z.string().email().uuid();
 
@@ -143,7 +143,7 @@ describe("convertStringSchema", () => {
       validate:
         "/^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9_'+\\-\\.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9\\-]*\\.)+[a-zA-Z]{2,}$/",
     });
-    expect(mockLogger.warn.mock.lastCall).toEqual([
+    expect(mockLogger.debug.mock.lastCall).toEqual([
       "This schema defines multiple checks at `hello`, but only one can be used, selecting first check: email",
     ]);
   });

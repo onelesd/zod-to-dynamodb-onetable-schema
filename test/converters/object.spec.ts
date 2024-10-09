@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { convertObjectSchema } from "../../src/converters/object";
+import { mock } from "vitest-mock-extended";
+import { Logger } from "winston";
 
-const mockOpts = {};
-const mockRefs = { currentPath: ["hello"] };
+const mockLogger = mock<Logger>();
+const mockOpts = { logger: mockLogger };
+const mockRefs = { currentPath: [] };
 
 describe("convertObjectSchema", () => {
   it("should return schemaless object if no keys supplied", () => {
@@ -22,8 +25,11 @@ describe("convertObjectSchema", () => {
   it("should return all keys with their own onefield schemas filled in", () => {
     // Assemble
     const zodObjectSchema = z.object({
-      hello: z.string(),
-      world: z.number(),
+      string: z.string(),
+      number: z.number(),
+      boolean: z.boolean(),
+      optional: z.boolean().optional(),
+      nullable: z.boolean().nullable(),
     });
 
     // Act
@@ -35,13 +41,16 @@ describe("convertObjectSchema", () => {
       type: "object",
       required: true,
       schema: {
-        hello: { type: "string", required: true },
-        world: { type: "number", required: true },
+        string: { type: "string", required: true },
+        number: { type: "number", required: true },
+        boolean: { type: "boolean", required: true },
+        optional: { type: "boolean" },
+        nullable: { type: "boolean" },
       },
     });
   });
 
-  it("should return `required: false` for all keys when `.partial()` is used", () => {
+  it("should remove required fields for all keys when `.partial()` is used", () => {
     // Assemble
     const zodObjectSchema = z
       .object({
@@ -58,8 +67,8 @@ describe("convertObjectSchema", () => {
       type: "object",
       required: true,
       schema: {
-        hello: { type: "string", required: undefined },
-        world: { type: "number", required: undefined },
+        hello: { type: "string" },
+        world: { type: "number" },
       },
     });
   });
@@ -83,7 +92,7 @@ describe("convertObjectSchema", () => {
       required: true,
       schema: {
         hello: { type: "string", required: true },
-        world: { type: "number", required: undefined },
+        world: { type: "number" },
       },
     });
   });
@@ -137,5 +146,20 @@ describe("convertObjectSchema", () => {
         },
       },
     });
+  });
+
+  it("should udate the ref path when passing it recurively", () => {
+    // Assemble
+    const zodObjectSchema = z.object({
+      hello: z.object({ world: z.object({ foo: z.number().max(10) }) }), // max causes debug log
+    });
+
+    // Act
+    convertObjectSchema(zodObjectSchema, mockRefs, mockOpts);
+
+    // Assert
+    expect(mockLogger.debug.mock.lastCall).toEqual([
+      "This schema defines number checks at `hello.world.foo`, but OneTable doesn't support this kind of validation",
+    ]);
   });
 });

@@ -1,5 +1,5 @@
 import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-types";
+import { Opts, Ref, ZodToOneField } from "src/converter-type";
 import { ZodOptional, ZodTypeAny } from "zod";
 
 export type ZodOptionalOneField<Schema extends ZodTypeAny> = Omit<

@@ -1,10 +1,11 @@
 import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-types";
+import { Opts, Ref, ZodToOneField } from "src/converter-type";
 import { ZodNullable, ZodTypeAny } from "zod";
 
-export type ZodNullableOneField<Schema extends ZodTypeAny> = {
-  required: false;
-} & ZodToOneField<Schema>;
+export type ZodNullableOneField<Schema extends ZodTypeAny> = Omit<
+  ZodToOneField<Schema>,
+  "required"
+>;
 
 export const convertNullableSchema = <T extends ZodTypeAny>(
   zodSchema: ZodNullable<T>,
@@ -16,5 +17,7 @@ export const convertNullableSchema = <T extends ZodTypeAny>(
     ref,
     opts,
   );
-  return { ...innerField, required: false } as ZodToOneField<ZodNullable<T>>;
+  return { ...innerField, required: undefined } as ZodToOneField<
+    ZodNullable<T>
+  >;
 };

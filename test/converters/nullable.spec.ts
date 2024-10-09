@@ -20,6 +20,6 @@ describe("convertNullableSchema", () => {
     );
 
     // Assert
-    expect(onefield).toEqual({ type: "number", required: false });
+    expect(onefield).toEqual({ type: "number", required: undefined });
   });
 });

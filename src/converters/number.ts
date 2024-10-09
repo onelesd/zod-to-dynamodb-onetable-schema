@@ -1,12 +1,17 @@
-import { Opts, Ref, ZodToOneField } from "src/converter-types";
+import { Opts, Ref, ZodToOneField } from "src/converter-type";
 import { ZodNumber } from "zod";
 
 export type ZodNumberOneField = { type: "number"; required: true };
 
 export const convertNumberSchema = (
-  _: ZodNumber,
-  __: Ref,
-  ___: Opts,
+  zodSchema: ZodNumber,
+  ref: Ref,
+  opts: Opts,
 ): ZodToOneField<ZodNumber> => {
+  if (zodSchema._def.checks.length !== 0) {
+    opts.logger?.debug(
+      `This schema defines number checks at \`${ref.currentPath.join(".")}\`, but OneTable doesn't support this kind of validation`,
+    );
+  }
   return { type: "number", required: true };
 };
