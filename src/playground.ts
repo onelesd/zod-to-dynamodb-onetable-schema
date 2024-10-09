@@ -15,10 +15,10 @@ enum ValidEnum {
 }
 
 const exampleModelSchema = z.object({
-  pk: z.string(),
+  pk: z.literal("example#{string}"),
   sk: z.string(),
   string: z.string(),
-  number: z.number(),
+  number: z.literal(9),
   date: z.date(),
   object: z.object({ string: z.string(), number: z.number() }),
   array: z.array(z.object({ hello: z.string() })),
@@ -35,3 +35,4 @@ const table = new Table({
 });
 
 const model = table.getModel("Example");
+model.create({ number: 9 });

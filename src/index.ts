@@ -22,6 +22,7 @@ import { convertEnumSchema } from "./converters/enum";
 import { convertSetSchema } from "./converters/set";
 import { convertNativeEnumSchema } from "./converters/native-enum";
 import { convertDefaultSchema } from "./converters/default";
+import { convertLiteralSchema } from "./converters/literal";
 
 type ConverterFunction = <T extends ZodSchema>(
   schema: ZodSchema,
@@ -60,6 +61,7 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodDefault:
       return convertDefaultSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodLiteral:
+      return convertLiteralSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNull:
     case ZodFirstPartyTypeKind.ZodRecord:
     case ZodFirstPartyTypeKind.ZodMap:
@@ -123,3 +125,5 @@ export const createModelSchema = <T extends ZodRawShape>(
     {} as ZodObjectOneFieldSchema<T>,
   );
 };
+
+// TODO: Replace strings with constructors

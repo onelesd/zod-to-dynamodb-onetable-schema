@@ -1,10 +1,12 @@
 import { Logger } from "winston";
 import {
+  Primitive,
   ZodArray,
   ZodBoolean,
   ZodDate,
   ZodDefault,
   ZodEnum,
+  ZodLiteral,
   ZodNativeEnum,
   ZodNumber,
   ZodObject,
@@ -24,11 +26,15 @@ import { ZodEnumOneField } from "./converters/enum";
 import { ZodSetOneField } from "./converters/set";
 import { ZodNativeEnumOneField } from "./converters/native-enum";
 import { ZodDefaultOneField } from "./converters/default";
+import { ZodLiteralOneField } from "./converters/literal";
 
 export type Ref = { currentPath: string[] };
 export type Opts = { logger?: Logger };
 
-export type ZodToOneField<T extends ZodTypeAny> = T extends ZodString
+export type ZodToOneField<T extends ZodTypeAny> =
+  T extends ZodLiteral<infer Type extends Primitive>
+  ? ZodLiteralOneField<Type>
+  : T extends ZodString
   ? ZodStringOneField
   : T extends ZodNumber
   ? ZodNumberOneField

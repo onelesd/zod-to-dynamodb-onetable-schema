@@ -38,11 +38,11 @@ describe("convertNativeEnumSchema", () => {
     const zodNativeEnumSchema = z.nativeEnum(InvalidEnum);
 
     // Act
-    const delayedEffect = () =>
+    const managedEffect = () =>
       convertNativeEnumSchema(zodNativeEnumSchema, mockRefs, mockOpts);
 
     // Assert
-    expect(delayedEffect).toThrowError(
+    expect(managedEffect).toThrowError(
       "Native enum is defined at `hello` that defines values of a type other than string, however OneTable only supports string values for enums",
     );
   });
