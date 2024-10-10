@@ -52,7 +52,7 @@ export type ZodToOneField<T extends ZodTypeAny> =
   ? ZodEnumOneField<Enum>
   : T extends ZodNativeEnum<infer Enum>
   ? ZodNativeEnumOneField<Enum>
-  : T extends ZodSet<infer Schema>
+  : T extends ZodSet
   ? ZodSetOneField
   : T extends ZodDefault<infer Schema>
   ? ZodDefaultOneField<Schema>
