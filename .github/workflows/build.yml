@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PORT: 8000
     strategy:
       matrix:
         node-version: [20.x]
@@ -20,7 +22,7 @@ jobs:
           distribution: "adopt"
           java-version: "11"
       - name: Setup DynamoDB local
-        run: docker run -p 8000:8000 amazon/dynamodb-local
+        run: docker run -d -p 8000:8000 amazon/dynamodb-local
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
