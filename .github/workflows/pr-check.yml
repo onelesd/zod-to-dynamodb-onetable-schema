@@ -1,14 +1,13 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: build
+name: PR Checks
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 jobs:
-  build:
+  quality-check:
+    name: Node Quality Check
     runs-on: ubuntu-latest
     env:
       PORT: 8000
@@ -27,8 +26,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run build --if-present
-      - run: npm run lint --if-present
-      - name: Tests
+      - name: Install packages
+        run: npm install
+      - name: Run build command
+        run: npm run build --if-present
+      - name: Run ESLint
+        run: npm run lint --if-present
+      - name: Run test suite
         run: npm run test run
