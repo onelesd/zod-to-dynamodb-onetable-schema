@@ -6,6 +6,7 @@
       "node",
       "vitest/globals"
     ],
+    "rootDir": ".",
     "baseUrl": "./"
   },
   "include": [
