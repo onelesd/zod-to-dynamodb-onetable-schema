@@ -1,7 +1,7 @@
 import waitPort from "wait-port";
 import * as DynamoDbLocal from "dynamo-db-local";
 
-const PORT = parseInt(process.env.PORT || "4567");
+export const PORT = parseInt(process.env.PORT || "8000");
 
 /*
  *  Setup -- start dynamodb instance

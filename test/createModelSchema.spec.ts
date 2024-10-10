@@ -8,10 +8,8 @@ import { TableConstructorParams } from "dynamodb-onetable/dist/mjs/Table";
 
 const dynamoExecutedCommandsTracer = vi.fn();
 
-const PORT = parseInt(process.env.PORT || "4567");
-
 const ClientV3 = new DynamoDBClient({
-  endpoint: `http://localhost:${PORT}`,
+  endpoint: `http://localhost:${process.env.DYNAMODB_PORT}`,
   region: "local",
   credentials: { accessKeyId: "test", secretAccessKey: "test" },
   logger: {
@@ -116,11 +114,8 @@ describe.each(tableConstructorParams)(
         set: new Set(["hello", "world"]),
         nullable: null,
       };
-      await exampleModel.upsert(inMemoryExampleEntity);
-      const exampleRecord = await exampleModel.get({
-        pk: "Example#test",
-        sk: "Example#",
-      });
+      await exampleModel.create(inMemoryExampleEntity);
+      const exampleRecord = await exampleModel.get({ string: "test" });
 
       // Assert
       expect(exampleRecord).toMatchObject(inMemoryExampleEntity);
@@ -132,10 +127,9 @@ describe.each(tableConstructorParams)(
       const exampleModel = table.getModel("Example");
 
       // Act
-      await exampleModel.upsert({});
+      await exampleModel.create({});
       const exampleRecord = await exampleModel.get({
-        pk: "Example#default-string",
-        sk: "Example#",
+        string: "default-string",
       });
 
       // Assert
