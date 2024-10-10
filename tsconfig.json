@@ -12,10 +12,12 @@
     "types": [
       "node"
     ],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true
   },
   "include": [
-    "src",
-    "test"
+    "src"
   ]
 }
