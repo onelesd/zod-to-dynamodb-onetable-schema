@@ -149,11 +149,11 @@ docker run -d -p 8000:8000 amazon/dynamodb-local
 3. Install dependencies
 
 ```sh
-npm install
+pnpm install
 ```
 
 4. You can now execute the test suite and develop 🙌
 
 ```sh
-npm test
+pnpm test
 ```
