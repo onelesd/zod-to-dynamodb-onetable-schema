@@ -1,7 +1,23 @@
 {
   "name": "zod-to-dynamodb-onetable-schema",
   "version": "0.0.0",
-  "description": "Build your `dynamodb-onetable` schema using your existing `zod` schemas",
+  "description": "Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class autocomplete",
+  "keywords": [
+    "dynamo",
+    "dynamodb",
+    "dynamodb-onetable",
+    "zod"
+  ],
+  "author": "John Harlow <hello@jharlow.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jharlow/zod-to-dynamodb-onetable-schema.git"
+  },
+  "bugs": {
+    "url": "httckaps://github.com/jharlow/zod-to-dynamodb-onetable-schema/issues"
+  },
+  "homepage": "https://github.com/jharlow/zod-to-dynamodb-onetable-schema",
   "main": "index.ts",
   "files": [
     "dist/**/*"
@@ -16,8 +32,6 @@
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
-  "author": "John Harlow",
-  "license": "MIT",
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.666.0",
     "@eslint/js": "^9.12.0",
