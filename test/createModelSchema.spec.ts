@@ -43,6 +43,8 @@ const exampleEntitySchema = z.object({
   enum: z.enum(["hello", "world"]).default("hello"),
   nativeEnum: z.nativeEnum(ValidEnum).default(ValidEnum.DEFAULT),
   set: z.set(z.string()).default(new Set(["default", "set"])),
+  optional: z.string().optional(),
+  nullable: z.string().nullable().default(null),
 });
 
 const exampleModelSchema = exampleEntitySchema.extend({
@@ -83,12 +85,10 @@ const tableConstructorParams: [
 describe.each(tableConstructorParams)(
   "createModelSchema %s",
   (_, tableConstructorParams) => {
-    console.log("starting tests");
     const table = new Table(tableConstructorParams);
 
     beforeAll(async () => {
       if (!(await table.exists())) {
-        console.log("table does not exist, creating table");
         await table.createTable();
         expect(await table.exists()).toBe(true);
       }
@@ -96,7 +96,6 @@ describe.each(tableConstructorParams)(
 
     afterAll(async () => {
       if (await table.exists()) {
-        console.log("table exists, deleting table");
         await table.deleteTable("DeleteTableForever");
         expect(await table.exists()).toBe(false);
       }
@@ -115,6 +114,7 @@ describe.each(tableConstructorParams)(
         enum: "world",
         array: [0],
         set: new Set(["hello", "world"]),
+        nullable: null,
       };
       await exampleModel.upsert(inMemoryExampleEntity);
       const exampleRecord = await exampleModel.get({
@@ -147,6 +147,7 @@ describe.each(tableConstructorParams)(
         enum: "hello",
         nativeEnum: ValidEnum.DEFAULT,
         set: new Set(["default", "set"]),
+        nullable: null,
       });
       expect(exampleEntitySchema.safeParse(exampleRecord).success).toBe(true);
     });

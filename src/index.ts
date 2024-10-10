@@ -55,10 +55,12 @@ const getConverterFunction = <T extends ZodSchema>(
       return convertDefaultSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodLiteral:
       return convertLiteralSchema as ConverterFunction;
-    case ZodFirstPartyTypeKind.ZodNull:
+    // TODO: Can be coersed (future work)
     case ZodFirstPartyTypeKind.ZodRecord:
     case ZodFirstPartyTypeKind.ZodMap:
     case ZodFirstPartyTypeKind.ZodTuple:
+    case ZodFirstPartyTypeKind.ZodIntersection:
+    case ZodFirstPartyTypeKind.ZodNull: // WARN: These types are unrepresentable in `dynamodb-onetable`
     case ZodFirstPartyTypeKind.ZodNaN:
     case ZodFirstPartyTypeKind.ZodBigInt:
     case ZodFirstPartyTypeKind.ZodSymbol:
@@ -68,15 +70,11 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodVoid:
     case ZodFirstPartyTypeKind.ZodUnion:
     case ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
-    case ZodFirstPartyTypeKind.ZodIntersection:
     case ZodFirstPartyTypeKind.ZodFunction:
     case ZodFirstPartyTypeKind.ZodUnknown:
     case ZodFirstPartyTypeKind.ZodLazy:
-    case ZodFirstPartyTypeKind.ZodEffects:
-    case ZodFirstPartyTypeKind.ZodCatch:
     case ZodFirstPartyTypeKind.ZodPromise:
     case ZodFirstPartyTypeKind.ZodBranded:
-    case ZodFirstPartyTypeKind.ZodPipeline:
     case ZodFirstPartyTypeKind.ZodReadonly:
     default:
       return (schema: ZodSchema, ref: Ref, ___: Opts) => {
@@ -105,7 +103,6 @@ export const createModelSchema = <T extends ZodRawShape>(
 ): ZodObjectOneFieldSchema<T> => {
   return Object.entries(zodSchema._def.shape()).reduce(
     (acc, [propName, zodSchema]) => {
-      if (zodSchema === undefined || zodSchema._def === undefined) return acc;
       return {
         ...acc,
         [propName]: convertZodSchemaToField(

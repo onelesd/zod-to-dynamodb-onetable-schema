@@ -32,7 +32,8 @@ describe("convertStringSchema", () => {
       const stringSchemaBase = z.string();
       const zodStringSchema =
         typeof stringSchemaBase[kind as keyof ZodString] === "function"
-          ? (stringSchemaBase[kind as keyof ZodString] as Function)?.()
+          ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+          (stringSchemaBase[kind as keyof ZodString] as Function)?.()
           : stringSchemaBase;
 
       // Act
@@ -112,7 +113,8 @@ describe("convertStringSchema", () => {
       const stringSchemaBase = z.string();
       const zodStringSchema =
         typeof stringSchemaBase[kind as keyof ZodString] === "function"
-          ? (stringSchemaBase[kind as keyof ZodString] as Function)?.()
+          ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+          (stringSchemaBase[kind as keyof ZodString] as Function)?.()
           : stringSchemaBase;
 
       // Act
