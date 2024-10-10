@@ -28,7 +28,7 @@ const getStringValidators = (
   ref: Ref,
   opts: Opts,
 ): Array<{ kind: string; regex: RegExp }> => {
-  if (!def.checks) return [];
+  if (def.checks.length === 0) return [];
   const validators = def.checks
     .map((check) => {
       const staticRegex = zodStringCheckPatterns[check.kind];

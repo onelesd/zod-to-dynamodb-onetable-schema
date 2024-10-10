@@ -1,5 +1,6 @@
+/* c8 ignore start */
 import { Table } from "dynamodb-onetable";
-import { createModelSchema } from "src";
+import { createModelSchema } from "./index";
 import { z } from "zod";
 
 const makeZodSchema = <T>(models: T) => ({
@@ -35,3 +36,4 @@ const table = new Table({
 });
 
 const model = table.getModel("Example");
+/* c8 ignore stop */

@@ -43,6 +43,8 @@ const exampleEntitySchema = z.object({
   enum: z.enum(["hello", "world"]).default("hello"),
   nativeEnum: z.nativeEnum(ValidEnum).default(ValidEnum.DEFAULT),
   set: z.set(z.string()).default(new Set(["default", "set"])),
+  optional: z.string().optional(),
+  nullable: z.string().nullable().default(null),
 });
 
 const exampleModelSchema = exampleEntitySchema.extend({
@@ -115,6 +117,7 @@ describe.each(tableConstructorParams)(
         enum: "world",
         array: [0],
         set: new Set(["hello", "world"]),
+        nullable: null,
       };
       await exampleModel.upsert(inMemoryExampleEntity);
       const exampleRecord = await exampleModel.get({
@@ -147,6 +150,7 @@ describe.each(tableConstructorParams)(
         enum: "hello",
         nativeEnum: ValidEnum.DEFAULT,
         set: new Set(["default", "set"]),
+        nullable: null,
       });
       expect(exampleEntitySchema.safeParse(exampleRecord).success).toBe(true);
     });

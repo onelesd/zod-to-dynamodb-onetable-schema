@@ -34,3 +34,5 @@ jobs:
         run: npm run lint --if-present
       - name: Run test suite
         run: npm run test run
+      - name: Run 100% coverage check
+        run: npm run coverage
