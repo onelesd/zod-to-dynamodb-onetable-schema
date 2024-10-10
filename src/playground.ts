@@ -37,6 +37,6 @@ const table = new Table({
 
 const model = table.getModel("Example");
 
-model.create({ string: "", object: { number: 9, string: "" }, number: 9 });
+// model.create({});
 
 /* c8 ignore stop */
