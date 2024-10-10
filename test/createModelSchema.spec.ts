@@ -85,12 +85,10 @@ const tableConstructorParams: [
 describe.each(tableConstructorParams)(
   "createModelSchema %s",
   (_, tableConstructorParams) => {
-    console.log("starting tests");
     const table = new Table(tableConstructorParams);
 
     beforeAll(async () => {
       if (!(await table.exists())) {
-        console.log("table does not exist, creating table");
         await table.createTable();
         expect(await table.exists()).toBe(true);
       }
@@ -98,7 +96,6 @@ describe.each(tableConstructorParams)(
 
     afterAll(async () => {
       if (await table.exists()) {
-        console.log("table exists, deleting table");
         await table.deleteTable("DeleteTableForever");
         expect(await table.exists()).toBe(false);
       }
