@@ -55,11 +55,10 @@ const getConverterFunction = <T extends ZodSchema>(
       return convertDefaultSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodLiteral:
       return convertLiteralSchema as ConverterFunction;
-    // TODO: Can be coersed (future work)
-    case ZodFirstPartyTypeKind.ZodRecord:
-    case ZodFirstPartyTypeKind.ZodMap:
-    case ZodFirstPartyTypeKind.ZodTuple:
-    case ZodFirstPartyTypeKind.ZodIntersection:
+    case ZodFirstPartyTypeKind.ZodRecord: // TODO: Can be coersed to object
+    case ZodFirstPartyTypeKind.ZodMap: // TODO: Can be coersed to object
+    case ZodFirstPartyTypeKind.ZodIntersection: // TODO: Can be coersed to object
+    case ZodFirstPartyTypeKind.ZodTuple: // TODO: Can be coersed to array
     case ZodFirstPartyTypeKind.ZodNull: // WARN: These types are unrepresentable in `dynamodb-onetable`
     case ZodFirstPartyTypeKind.ZodNaN:
     case ZodFirstPartyTypeKind.ZodBigInt:
@@ -97,6 +96,7 @@ export const convertZodSchemaToField = <T extends ZodSchema>(
   return converterFunction(zodSchema, ref, opts);
 };
 
+// TODO: Add zod to name
 export const createModelSchema = <T extends ZodRawShape>(
   zodSchema: ZodObject<T>,
   opts: Opts,
