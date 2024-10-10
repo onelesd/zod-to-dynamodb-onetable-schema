@@ -12,7 +12,7 @@ Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class 
 
 ## Rationale
 
-`dyanmodb-onetable` provides a fantastic API for building and interacting with DynamoDB single-table designs. In using it, I've come to appreciate a couple of areas I wanted something slightly different:
+`dyanmodb-onetable` provides a fantastic API for building and interacting with DynamoDB single-table designs. In using it, I've come to appreciate a couple of areas where I wanted something slightly different:
 
 1. The validation option offers a single regex pattern per field [(and we all know how regex goes)](https://regex.info/blog/2006-09-15/247)
 2. Defining the schema can be tricky because using the supplied types clobbers the library's ability to infer your specific models
@@ -35,4 +35,3 @@ const accountSchema = z.object({
 ```
 
 You can add it to your
-

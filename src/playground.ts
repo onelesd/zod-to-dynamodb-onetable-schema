@@ -35,4 +35,3 @@ const table = new Table({
 });
 
 const model = table.getModel("Example");
-model.create({ number: 9 });

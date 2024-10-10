@@ -21,7 +21,11 @@ export const convertObjectSchema = <Schema extends ZodRawShape>(
 ): ZodToOneField<ZodObject<Schema>> => {
   const shape = zodSchema._def.shape();
   if (Object.keys(shape).length === 0) {
-    return { type: "object", required: true, schema: undefined };
+    return {
+      type: "object",
+      required: true,
+      schema: undefined,
+    } as ZodToOneField<ZodObject<Schema>>;
   }
   const schema = Object.entries(shape).reduce((acc, [propName, zodSchema]) => {
     return {

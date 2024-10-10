@@ -32,7 +32,7 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodOptional:
       return convertOptionalSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNullable:
-      return convertNullableSchema as ConverterFunction;
+      return convertNullableSchema as unknown as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodString:
       return convertStringSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNumber:
