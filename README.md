@@ -33,46 +33,29 @@ const accountSchema = z.object({
 });
 ```
 
-You've also started defining your `dynamodb-onetable` Table schema:
-
-```ts
-import { OneSchema, OneTableError } from "dynamodb-onetable";
-
-const SCHEMA = {
-  format: "onetable:1.1.0",
-  version: "0.0.1",
-  indexes: { primary: { hash: "pk", sort: "sk" } },
-  params: { isoDates: false, timestamps: true, null: true },
-  // 👈 We need models here
-} satisfies OneSchema;
-```
-
-Adding a `Account` model is easy. First, create a `zod` schema and then pass it into `createModelSchema`.
+Defining a `Account` model is now easy. We'll extend it to include our table's indexes and pass it to `createModelSchema`.
 
 ```ts
 import { createModelSchema } from "zod-to-dynamodb-onetable-schema";
+import { Table } from "dynamodb-onetable";
 
 const accountRecordSchema = accountSchema.extend({
-  pk: z.literal("${_type}#${id}"),
+  pk: z.literal("${_type}#${id}"), // 👈 more about this later
   sk: z.literal("${_type}#"),
 });
 
-const SCHEMA = {
-  // other fields collapsed
-  models: { Account: createModelSchema(accountRecordSchema, {}) },
-} satisfies OneSchema;
-```
-
-Your schema is complete, now let's use the model:
-
-```ts
-import { Table } from "dynamodb-onetable";
-
 const table = new Table({
   // other fields collapsed,
-  schema: SCHEMA,
+  schema: {
+    indexes: { primary: { hash: "pk", sort: "sk" } },
+    models: { Account: createModelSchema(accountRecordSchema, {}) },
+  },
 });
+```
 
+We can now use our new Account model...
+
+```ts
 const accountModel = table.getModel("Account");
 
 const newAccount: z.infer<typeof accountSchema> = {
@@ -92,7 +75,7 @@ Notice we didn't need to specify the `pk` or `pk`? That's because `Table` handle
 <summary><b>Expand for an example that explicitly sets the indexes</b></summary>
 
 ```ts
-import { Table, OneSchema, OneTableError } from "dynamodb-onetable";
+import { Table } from "dynamodb-onetable";
 import { createModelSchema } from "zod-to-dynamodb-onetable-schema";
 import { z } from "zod";
 
@@ -104,10 +87,13 @@ const accountRecordSchema = z.object({
   status: z.enum(["verified", "unverified"]),
 });
 
-const SCHEMA = {
-  // other fields collapsed
-  models: { Account: createModelSchema(accountRecordSchema, {}) },
-} satisfies OneSchema;
+const table = new Table({
+  // other fields collapsed,
+  schema: {
+    indexes: { primary: { hash: "pk", sort: "sk" } },
+    models: { Account: createModelSchema(accountRecordSchema, {}) },
+  },
+});
 
 const accountModel = table.getModel("Account");
 
