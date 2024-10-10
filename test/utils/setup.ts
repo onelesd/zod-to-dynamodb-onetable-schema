@@ -8,7 +8,7 @@ const PORT = parseInt(process.env.PORT || "4567");
  */
 export const setup = async () => {
   const dynamodb = DynamoDbLocal.spawn({ port: PORT });
-  let result = await waitPort({
+  const result = await waitPort({
     host: "0.0.0.0",
     port: PORT,
     timeout: 20000,
@@ -19,9 +19,9 @@ export const setup = async () => {
   process.env.DYNAMODB_PID = String(dynamodb.pid);
   process.env.DYNAMODB_PORT = String(PORT);
 
-  // When jest throws anything unhandled, ensure we kill the spawned process
+  // When Vitest throws anything unhandled, ensure we kill the spawned process
   process.on("unhandledRejection", (_) => {
-    let pid = parseInt(process.env.DYNAMODB_PID || "");
+    const pid = parseInt(process.env.DYNAMODB_PID || "");
     if (pid) {
       process.kill(pid);
     }
@@ -29,10 +29,12 @@ export const setup = async () => {
 };
 
 export const teardown = async () => {
-  let pid = parseInt(process.env.DYNAMODB_PID || "");
+  const pid = parseInt(process.env.DYNAMODB_PID || "");
   if (pid) {
     try {
       process.kill(pid);
-    } catch (err) { }
+    } catch (err) {
+      return;
+    }
   }
 };
