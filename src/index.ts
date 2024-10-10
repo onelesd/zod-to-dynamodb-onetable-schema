@@ -1,11 +1,4 @@
-import { Table, type OneField, type OneModel } from "dynamodb-onetable";
-import {
-  z,
-  ZodFirstPartyTypeKind,
-  ZodObject,
-  ZodRawShape,
-  ZodSchema,
-} from "zod";
+import { ZodFirstPartyTypeKind, ZodObject, ZodRawShape, ZodSchema } from "zod";
 import { Opts, Ref, ZodToOneField } from "./converter-type";
 import { convertStringSchema } from "./converters/string";
 import { convertOptionalSchema } from "./converters/optional";
@@ -39,7 +32,7 @@ const getConverterFunction = <T extends ZodSchema>(
     case ZodFirstPartyTypeKind.ZodOptional:
       return convertOptionalSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNullable:
-      return convertNullableSchema;
+      return convertNullableSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodString:
       return convertStringSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNumber:
@@ -127,3 +120,7 @@ export const createModelSchema = <T extends ZodRawShape>(
 };
 
 // TODO: Replace strings with constructors
+// TODO: Find unreachable code
+// TODO: GHA test pipeline
+// TODO: GHA publish pipeline
+// TODO: Build dist
