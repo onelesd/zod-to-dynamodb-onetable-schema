@@ -20,14 +20,14 @@
   "homepage": "https://github.com/jharlow/zod-to-dynamodb-onetable-schema",
   "main": "index.ts",
   "files": [
-    "dist/**/*"
+    "lib/**/*"
   ],
   "type": "module",
-  "exports": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "exports": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "tsc --build --clean && rm -rf dist",
+    "clean": "tsc --build --clean && rm -rf lib",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
     "test": "vitest",

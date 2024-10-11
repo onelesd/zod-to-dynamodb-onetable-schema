@@ -35,6 +35,7 @@ jobs:
       - name: Run 100% coverage check
         run: pnpm coverage
   publish:
+    name: Publish package to npm 🚀
     runs-on: ubuntu-latest
     needs: quality-check
     steps:
@@ -48,8 +49,6 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-      - name: Publish 🚀
-        shell: bash
-        run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}

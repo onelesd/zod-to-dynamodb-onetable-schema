@@ -1,16 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "types": [
-      "node",
-      "vitest/globals"
-    ],
+    "types": ["node", "vitest/globals"],
     "rootDir": ".",
     "baseUrl": "./",
     "esModuleInterop": true
   },
-  "include": [
-    "."
-  ]
+  "include": ["."]
 }
