@@ -90,16 +90,15 @@ const getConverterFunction = <T extends ZodSchema>(
 export const convertZodSchemaToField = <T extends ZodSchema>(
   zodSchema: T,
   ref: Ref,
-  opts: Opts,
+  opts?: Opts,
 ): ZodToOneField<T> => {
   const converterFunction = getConverterFunction(zodSchema);
-  return converterFunction(zodSchema, ref, opts);
+  return converterFunction(zodSchema, ref, opts ?? {});
 };
 
-// TODO: Add zod to name
-export const createModelSchema = <T extends ZodRawShape>(
+export const zodOneModelSchema = <T extends ZodRawShape>(
   zodSchema: ZodObject<T>,
-  opts: Opts,
+  opts?: Opts,
 ): ZodObjectOneFieldSchema<T> => {
   return Object.entries(zodSchema._def.shape()).reduce(
     (acc, [propName, zodSchema]) => {
@@ -116,5 +115,6 @@ export const createModelSchema = <T extends ZodRawShape>(
   );
 };
 
+export type { ZodToOneField };
+
 // TODO: Replace strings with constructors
-// TODO: GHA publish pipeline

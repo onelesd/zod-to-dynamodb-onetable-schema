@@ -7,7 +7,7 @@ Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class 
 - Convert `zod` _objects_ into `dynamo-onetable` model schemas
 - Convert `zod` _schemas_ into `dynamo-onetable` model field schemas
 - Get dynamic autocomplete as you expect from `dynamo-onetable` via type-fu 🥋
-- Un-representable data-types cause errors, un-representable checks optionally `debug` log
+- Un-representable data-types cause errors, un-representable checks will notify you via `logger.debug` if you provide a Winston instance
 - Zero dependencies
 
 ## Rationale
@@ -33,10 +33,10 @@ const accountSchema = z.object({
 });
 ```
 
-Defining a `Account` model is now easy. We'll extend it to include our table's indexes and pass it to `createModelSchema`.
+Defining a `Account` model is now easy. We'll extend it to include our table's indexes and pass it to `zodOneModelSchema`.
 
 ```ts
-import { createModelSchema } from "zod-to-dynamodb-onetable-schema";
+import { zodOneModelSchema } from "zod-to-dynamodb-onetable-schema";
 import { Table } from "dynamodb-onetable";
 
 const accountRecordSchema = accountSchema.extend({
@@ -48,7 +48,7 @@ const table = new Table({
   // other fields collapsed,
   schema: {
     indexes: { primary: { hash: "pk", sort: "sk" } },
-    models: { Account: createModelSchema(accountRecordSchema, {}) },
+    models: { Account: zodOneModelSchema(accountRecordSchema) },
   },
 });
 ```
@@ -76,7 +76,7 @@ Notice we didn't need to specify the `pk` or `pk`? That's because `Table` handle
 
 ```ts
 import { Table } from "dynamodb-onetable";
-import { createModelSchema } from "zod-to-dynamodb-onetable-schema";
+import { zodOneModelSchema } from "zod-to-dynamodb-onetable-schema";
 import { z } from "zod";
 
 const accountRecordSchema = z.object({
@@ -91,7 +91,7 @@ const table = new Table({
   // other fields collapsed,
   schema: {
     indexes: { primary: { hash: "pk", sort: "sk" } },
-    models: { Account: createModelSchema(accountRecordSchema, {}) },
+    models: { Account: zodOneModelSchema(accountRecordSchema) },
   },
 });
 
@@ -116,7 +116,7 @@ expect(newAccount).toMatchObject(storedAccount);
 
 I appreciate any contributions, issues or discussions. My aim is to make contributing quick and easy.
 
-Please note that PR quality checks enforce a 100% code coverage rate and will test your code against a local version of DynamoDB. Passing these requirements are essential to getting a merge/release. For new code, at least some tests should interface with an instance of `Table` that interacts with a local DynamoDB instance. An example of this test type is at `tests/createModelSchema.spec.ts`.
+Please note that PR quality checks enforce a 100% code coverage rate and will test your code against a local version of DynamoDB. Passing these requirements are essential to getting a merge/release. For new code, at least some tests should interface with an instance of `Table` that interacts with a local DynamoDB instance. An example of this test type is at `tests/zodOneModelSchema.spec.ts`.
 
 Here's a quick start to getting this repo running on your own machine (assumes you already have `gh`, `node` and `docker` installed):
 

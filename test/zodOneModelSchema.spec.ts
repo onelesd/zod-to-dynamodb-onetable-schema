@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Table } from "dynamodb-onetable";
-import { createModelSchema } from "../src";
+import { zodOneModelSchema } from "../src";
 import { z } from "zod";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { vi } from "vitest";
@@ -51,7 +51,7 @@ const exampleModelSchema = exampleEntitySchema.extend({
 });
 
 const schema = makeZodSchema({
-  Example: createModelSchema(exampleModelSchema, {}),
+  Example: zodOneModelSchema(exampleModelSchema),
 });
 
 const tableConstructorParams: [
@@ -81,7 +81,7 @@ const tableConstructorParams: [
   ];
 
 describe.each(tableConstructorParams)(
-  "createModelSchema %s",
+  "zodOneModelSchema %s",
   (_, tableConstructorParams) => {
     const table = new Table(tableConstructorParams);
 
