@@ -1,4 +1,4 @@
-name: PR Checks
+name: Merge into main checks
 on:
   push:
     branches: [main]
@@ -49,6 +49,11 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-      - uses: JS-DevTools/npm-publish@v3
+      - name: Install packages
+        run: pnpm install
+      - name: Run build command
+        run: pnpm build
+      - name: Publish to npm 🚀
+        uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}

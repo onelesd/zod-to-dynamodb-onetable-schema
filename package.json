@@ -1,6 +1,6 @@
 {
   "name": "zod-to-dynamodb-onetable-schema",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "description": "Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class autocomplete",
   "keywords": [
     "dynamo",
@@ -14,17 +14,18 @@
     "type": "git",
     "url": "git+https://github.com/jharlow/zod-to-dynamodb-onetable-schema.git"
   },
+  "homepage": "https://github.com/jharlow/zod-to-dynamodb-onetable-schema",
   "bugs": {
     "url": "httckaps://github.com/jharlow/zod-to-dynamodb-onetable-schema/issues"
   },
-  "homepage": "https://github.com/jharlow/zod-to-dynamodb-onetable-schema",
-  "main": "index.ts",
-  "files": [
-    "lib/**/*"
-  ],
-  "type": "module",
   "exports": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "README.md",
+    "package.json"
+  ],
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "clean": "tsc --build --clean && rm -rf lib",
