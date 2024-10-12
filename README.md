@@ -118,7 +118,7 @@ I appreciate any contributions, issues or discussions. My aim is to make contrib
 
 Please note that PR quality checks enforce a 100% code coverage rate and will test your code against a local version of DynamoDB. Passing these requirements are essential to getting a merge/release. For new code, at least some tests should interface with an instance of `Table` that interacts with a local DynamoDB instance. An example of this test type is at `tests/zodOneModelSchema.spec.ts`.
 
-Here's a quick start to getting this repo running on your own machine (assumes you already have `gh`, `node` and `docker` installed):
+Here's a quick start to getting this repo running on your own machine (assumes you already have `gh`, `node`, `pnpm` and `docker` installed):
 
 1. Clone the repo to your own machine
 
@@ -142,4 +142,10 @@ pnpm install
 
 ```sh
 pnpm test
+```
+
+5. Before pushing, check your work will pass checks:
+
+```sh
+pnpm pr-checks
 ```
