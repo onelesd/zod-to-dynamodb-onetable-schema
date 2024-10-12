@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -10,6 +10,7 @@ export default defineConfig({
         branches: 100,
         statements: 100,
       },
+      exclude: configDefaults.coverage.exclude?.concat(["<rootDir>/../lib/**"]),
     },
   },
 });
