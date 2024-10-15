@@ -1,4 +1,4 @@
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodEnum } from "zod";
 
 export type ZodEnumOneField<Enum extends [string, ...string[]]> = {
