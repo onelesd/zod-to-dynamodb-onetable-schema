@@ -6,7 +6,6 @@ import { zodOneFieldSchema } from "../src";
 
 const mockLogger = mock<Logger>();
 const mockOpts = { logger: mockLogger };
-const mockRefs = { currentPath: ["hello"] };
 
 describe("zodOneFieldSchema", () => {
   enum TestEnum {
@@ -31,7 +30,7 @@ describe("zodOneFieldSchema", () => {
     "should return a schema for valid $_def.typeName type",
     (schema) => {
       // Assemble
-      const onefield = zodOneFieldSchema(schema, mockRefs, mockOpts);
+      const onefield = zodOneFieldSchema(schema, undefined, mockOpts);
 
       // Act
       expect(onefield).toBeDefined();
@@ -70,7 +69,8 @@ describe("zodOneFieldSchema", () => {
     "should throw an error if invalid $_def.typeName types are used",
     (schema) => {
       // Act
-      const managedEffect = () => zodOneFieldSchema(schema, mockRefs, mockOpts);
+      const managedEffect = () =>
+        zodOneFieldSchema(schema, undefined, mockOpts);
 
       // Assert
       expect(managedEffect).toThrowError(
