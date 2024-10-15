@@ -1,4 +1,4 @@
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodBoolean } from "zod";
 
 export type ZodBooleanOneField = { type: "boolean"; required: true };

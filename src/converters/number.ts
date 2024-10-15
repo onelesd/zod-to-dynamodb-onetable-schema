@@ -1,4 +1,4 @@
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodNumber } from "zod";
 
 export type ZodNumberOneField = { type: "number"; required: true };

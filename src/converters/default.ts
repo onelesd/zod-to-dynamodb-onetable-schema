@@ -1,5 +1,5 @@
-import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { convertZodSchemaToField } from "../";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { z, ZodDefault, ZodTypeAny } from "zod";
 
 export type ZodDefaultOneField<T extends ZodTypeAny> = ZodToOneField<T> & {

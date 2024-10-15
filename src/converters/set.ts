@@ -1,4 +1,4 @@
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodSet } from "zod";
 
 export type ZodSetOneField = { type: SetConstructor; required: true };

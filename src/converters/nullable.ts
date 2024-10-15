@@ -1,5 +1,5 @@
-import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { convertZodSchemaToField } from "../";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodNullable, ZodTypeAny } from "zod";
 
 export type ZodNullableOneField<Schema extends ZodTypeAny> = Omit<

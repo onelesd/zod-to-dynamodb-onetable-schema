@@ -1,5 +1,5 @@
-import { convertZodSchemaToField } from "src";
-import { Opts, Ref, ZodToOneField } from "src/converter-type";
+import { convertZodSchemaToField } from "../index";
+import { Opts, Ref, ZodToOneField } from "../converter-type";
 import {
   ArrayCardinality,
   ZodAny,
