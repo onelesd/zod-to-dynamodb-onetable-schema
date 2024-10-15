@@ -114,7 +114,10 @@ describe.each(tableConstructorParams)(
         set: new Set(["hello", "world"]),
         nullable: null,
       };
-      await exampleModel.create(inMemoryExampleEntity);
+      await exampleModel.create({
+        ...inMemoryExampleEntity,
+        nullable: undefined,
+      });
       const exampleRecord = await exampleModel.get({ string: "test" });
 
       // Assert
