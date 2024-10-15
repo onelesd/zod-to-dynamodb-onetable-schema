@@ -1,4 +1,4 @@
-import { convertZodSchemaToField } from "../";
+import { zodOneFieldSchema } from "../";
 import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { z, ZodDefault, ZodTypeAny } from "zod";
 
@@ -12,7 +12,7 @@ export const convertDefaultSchema = <T extends ZodTypeAny>(
   opts: Opts,
 ): ZodToOneField<ZodDefault<T>> => {
   const innerZodSchema = zodSchema._def.innerType;
-  const innerOneField = convertZodSchemaToField(innerZodSchema, ref, opts);
+  const innerOneField = zodOneFieldSchema(innerZodSchema, ref, opts);
   const defaultValue = zodSchema._def.defaultValue();
   return { ...innerOneField, default: defaultValue };
 };

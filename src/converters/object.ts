@@ -1,4 +1,4 @@
-import { convertZodSchemaToField } from "../";
+import { zodOneFieldSchema } from "../";
 import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 
@@ -30,7 +30,7 @@ export const convertObjectSchema = <Schema extends ZodRawShape>(
   const schema = Object.entries(shape).reduce((acc, [propName, zodSchema]) => {
     return {
       ...acc,
-      [propName]: convertZodSchemaToField(
+      [propName]: zodOneFieldSchema(
         zodSchema as ZodTypeAny,
         { ...ref, currentPath: [...ref.currentPath, propName] },
         opts,

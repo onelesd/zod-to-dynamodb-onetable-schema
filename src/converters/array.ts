@@ -1,4 +1,4 @@
-import { convertZodSchemaToField } from "../index";
+import { zodOneFieldSchema } from "../";
 import { Opts, Ref, ZodToOneField } from "../converter-type";
 import {
   ArrayCardinality,
@@ -53,7 +53,7 @@ export const convertArraySchema = <
       ZodArray<Schema, Cardinality>
     >;
   }
-  const items = convertZodSchemaToField(
+  const items = zodOneFieldSchema(
     innnerType,
     { currentPath: [...ref.currentPath, "0"] },
     opts,

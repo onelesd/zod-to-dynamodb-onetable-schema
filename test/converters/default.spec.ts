@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z, ZodTypeAny } from "zod";
 import { convertDefaultSchema } from "../../src/converters/default";
-import { convertZodSchemaToField } from "../../src";
+import { zodOneFieldSchema } from "../../src";
 import { Logger } from "winston";
 import { mock } from "vitest-mock-extended";
 
@@ -36,7 +36,7 @@ describe("convertDefaultSchema", () => {
       // Assert
       expect(onefield).toEqual({
         default: defaultValue,
-        ...convertZodSchemaToField(schema, mockRefs, mockOpts),
+        ...zodOneFieldSchema(schema, mockRefs, mockOpts),
       });
     },
   );

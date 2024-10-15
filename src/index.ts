@@ -87,13 +87,13 @@ const getConverterFunction = <T extends ZodSchema>(
   }
 };
 
-export const convertZodSchemaToField = <T extends ZodSchema>(
+export const zodOneFieldSchema = <T extends ZodSchema>(
   zodSchema: T,
-  ref: Ref,
+  ref?: Ref,
   opts?: Opts,
 ): ZodToOneField<T> => {
   const converterFunction = getConverterFunction(zodSchema);
-  return converterFunction(zodSchema, ref, opts ?? {});
+  return converterFunction(zodSchema, ref ?? { currentPath: [] }, opts ?? {});
 };
 
 export const zodOneModelSchema = <T extends ZodRawShape>(
@@ -104,7 +104,7 @@ export const zodOneModelSchema = <T extends ZodRawShape>(
     (acc, [propName, zodSchema]) => {
       return {
         ...acc,
-        [propName]: convertZodSchemaToField(
+        [propName]: zodOneFieldSchema(
           zodSchema,
           { currentPath: [propName] },
           opts,

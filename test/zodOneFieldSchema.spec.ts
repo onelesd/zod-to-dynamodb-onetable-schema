@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { Logger } from "winston";
 import { mock } from "vitest-mock-extended";
-import { convertZodSchemaToField } from "../src";
+import { zodOneFieldSchema } from "../src";
 
 const mockLogger = mock<Logger>();
 const mockOpts = { logger: mockLogger };
 const mockRefs = { currentPath: ["hello"] };
 
-describe("convertZodSchemaToField", () => {
+describe("zodOneFieldSchema", () => {
   enum TestEnum {
     VALID = "VALID",
   }
@@ -31,7 +31,7 @@ describe("convertZodSchemaToField", () => {
     "should return a schema for valid $_def.typeName type",
     (schema) => {
       // Assemble
-      const onefield = convertZodSchemaToField(schema, mockRefs, mockOpts);
+      const onefield = zodOneFieldSchema(schema, mockRefs, mockOpts);
 
       // Act
       expect(onefield).toBeDefined();
@@ -70,8 +70,7 @@ describe("convertZodSchemaToField", () => {
     "should throw an error if invalid $_def.typeName types are used",
     (schema) => {
       // Act
-      const managedEffect = () =>
-        convertZodSchemaToField(schema, mockRefs, mockOpts);
+      const managedEffect = () => zodOneFieldSchema(schema, mockRefs, mockOpts);
 
       // Assert
       expect(managedEffect).toThrowError(
