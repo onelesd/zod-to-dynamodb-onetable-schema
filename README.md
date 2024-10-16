@@ -142,9 +142,8 @@ const table = new Table({
           required: true,
           schema: {
             id: { type: String, required: true },
-            // other attributes collapsed
+            //     👇  utilize our zod converter
             emails: zodOneFieldSchema(
-              // 👈  utilize our zod converter
               z.array(
                 z.object({
                   email: z.string().email(),
@@ -184,16 +183,16 @@ const accountSchema = z.object({
   status: z.enum(["verified", "unverified"]),
 });
 
-const accountRecordSchema = accountSchema.extend({
-  pk: z.literal("${_type}#${id}"),
-  sk: z.literal("${_type}#"),
-});
-
 type Account = z.infer<typeof accountSchema>;
 
 interface AccountStore {
   getAccount: (accountId: string) => Promise<Account | null>;
 }
+
+const accountRecordSchema = accountSchema.extend({
+  pk: z.literal("${_type}#${id}"),
+  sk: z.literal("${_type}#"),
+});
 
 const oneTableSchema = {
   // other attributes collapsed
@@ -222,7 +221,7 @@ const table = new Table({
 
 const accountStore = new AccountOneTableStore(table);
 
-const account = accountStore.get("test-id");
+const account = await accountStore.get("test-id");
 ```
 
 </details>
