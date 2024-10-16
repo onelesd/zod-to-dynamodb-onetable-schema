@@ -1,4 +1,4 @@
-import { convertZodSchemaToField } from "../";
+import { zodOneFieldSchema } from "../";
 import { Opts, Ref, ZodToOneField } from "../converter-type";
 import { ZodNullable, ZodTypeAny } from "zod";
 
@@ -12,7 +12,7 @@ export const convertNullableSchema = <T extends ZodTypeAny>(
   ref: Ref,
   opts: Opts,
 ): ZodToOneField<ZodNullable<T>> => {
-  const innerField = convertZodSchemaToField(
+  const innerField = zodOneFieldSchema(
     zodSchema._def.innerType,
     ref,
     opts,

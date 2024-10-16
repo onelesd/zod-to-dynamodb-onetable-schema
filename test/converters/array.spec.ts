@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { convertZodSchemaToField } from "../../src";
+import { zodOneFieldSchema } from "../../src";
 import { convertArraySchema } from "../../src/converters/array";
 import { Logger } from "winston";
 import { mock } from "vitest-mock-extended";
@@ -64,7 +64,7 @@ describe("convertArraySchema", () => {
       expect(onefield).toEqual({
         type: Array,
         required: true,
-        items: convertZodSchemaToField(schema, mockRefs, mockOpts),
+        items: zodOneFieldSchema(schema, mockRefs, mockOpts),
       });
     },
   );
