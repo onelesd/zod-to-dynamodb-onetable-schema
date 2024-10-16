@@ -1,6 +1,6 @@
 {
   "name": "zod-to-dynamodb-onetable-schema",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class autocomplete",
   "keywords": [
     "dynamo",
