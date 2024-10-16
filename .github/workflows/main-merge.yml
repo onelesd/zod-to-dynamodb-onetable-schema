@@ -38,9 +38,6 @@ jobs:
     name: Publish package to npm 🚀
     runs-on: ubuntu-latest
     needs: quality-check
-    permissions:
-      packages: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Install pnpm
@@ -56,7 +53,8 @@ jobs:
         run: pnpm install
       - name: Run build command
         run: pnpm build
-      - name: Publish to npm 🚀
+      - id: publish
+        name: Publish to npm 🚀
         uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
