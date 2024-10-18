@@ -24,28 +24,56 @@ describe("convertObjectSchema", () => {
 
   it("should return all keys with their own onefield schemas filled in", () => {
     // Assemble
+    enum ValidEnum {
+      Test = "Test",
+    }
     const zodObjectSchema = z.object({
-      string: z.string(),
-      number: z.number(),
+      array: z.array(z.string()),
       boolean: z.boolean(),
-      optional: z.boolean().optional(),
+      date: z.date(),
+      default: z.string().default("test"),
+      enum: z.enum(["foo", "bar"]),
+      literal: z.literal("literal"),
+      nativeEnum: z.nativeEnum(ValidEnum),
       nullable: z.boolean().nullable(),
+      number: z.number(),
+      optional: z.boolean().optional(),
+      record: z.record(z.string(), z.unknown()),
+      set: z.set(z.number()),
+      string: z.string(),
+      tuple: z.tuple([z.string()]),
     });
 
     // Act
     const onefield = convertObjectSchema(zodObjectSchema, mockRefs, mockOpts);
 
-    // TODO: Add items for other datatypes
     // Assert
     expect(onefield).toEqual({
       type: "object",
       required: true,
       schema: {
-        string: { type: "string", required: true },
-        number: { type: "number", required: true },
+        array: {
+          items: { required: true, type: "string", validate: undefined },
+          required: true,
+          type: Array,
+        },
         boolean: { type: "boolean", required: true },
-        optional: { type: "boolean" },
+        date: { type: "date", required: true },
+        default: { type: "string", required: true, default: "test" },
+        enum: { enum: ["foo", "bar"], required: true, type: "string" },
+        literal: { type: "string", value: "literal", required: true },
+        nativeEnum: { type: "string", enum: ["Test"], required: true },
         nullable: { type: "boolean" },
+        number: { type: "number", required: true },
+        optional: { type: "boolean" },
+        record: { type: "object", required: true },
+        set: { type: Set, required: true },
+        string: { type: "string", required: true },
+        tuple: {
+          type: "array",
+          required: true,
+          items: { type: "string", required: true },
+        },
       },
     });
   });

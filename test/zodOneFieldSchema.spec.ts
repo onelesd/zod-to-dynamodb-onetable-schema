@@ -18,6 +18,8 @@ describe("zodOneFieldSchema", () => {
     z.number(),
     z.boolean(),
     z.object({}),
+    z.record(z.string(), z.unknown()),
+    z.tuple([z.string()]),
     z.date(),
     z.array(z.unknown()),
     z.enum(["hello", "world"]),
@@ -39,9 +41,6 @@ describe("zodOneFieldSchema", () => {
 
   const invalidTypes = [
     z.null(),
-    z.record(z.string(), z.unknown()),
-    z.map(z.string(), z.unknown()),
-    z.tuple([z.string()]),
     z.nan(),
     z.bigint(),
     z.symbol(),

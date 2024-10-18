@@ -45,11 +45,17 @@ describe("convertArraySchema", () => {
 
   // TODO: Fill out remaining
   const schemaTypes = [
-    ["number", z.number()],
-    ["string", z.string()],
-    ["object", z.object({})],
+    ["array", z.array(z.string())],
     ["boolean", z.boolean()],
     ["date", z.date()],
+    ["enum", z.enum(["foo", "bar"])],
+    ["literal", z.literal("foo")],
+    ["number", z.number()],
+    ["object", z.object({})],
+    ["record", z.record(z.string(), z.unknown())],
+    ["set", z.set(z.string())],
+    ["string", z.string()],
+    ["tuple", z.tuple([z.string()])],
   ] as const;
   it.each(schemaTypes)(
     "should return array field with items when %s schema is supplied",

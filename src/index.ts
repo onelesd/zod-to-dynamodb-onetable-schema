@@ -16,6 +16,8 @@ import { convertSetSchema } from "./converters/set";
 import { convertNativeEnumSchema } from "./converters/native-enum";
 import { convertDefaultSchema } from "./converters/default";
 import { convertLiteralSchema } from "./converters/literal";
+import { convertRecordSchema } from "./converters/record";
+import { convertTupleSchema } from "./converters/tuple";
 
 type ConverterFunction = <T extends ZodSchema>(
   schema: ZodSchema,
@@ -55,11 +57,13 @@ const getConverterFunction = <T extends ZodSchema>(
       return convertDefaultSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodLiteral:
       return convertLiteralSchema as ConverterFunction;
-    case ZodFirstPartyTypeKind.ZodRecord: // TODO: Can be coersed to object
-    case ZodFirstPartyTypeKind.ZodMap: // TODO: Can be coersed to object
-    case ZodFirstPartyTypeKind.ZodIntersection: // TODO: Can be coersed to object
-    case ZodFirstPartyTypeKind.ZodTuple: // TODO: Can be coersed to array
+    case ZodFirstPartyTypeKind.ZodRecord:
+      return convertRecordSchema as ConverterFunction;
+    case ZodFirstPartyTypeKind.ZodTuple:
+      return convertTupleSchema as ConverterFunction;
     case ZodFirstPartyTypeKind.ZodNull: // WARN: These types are unrepresentable in `dynamodb-onetable`
+    case ZodFirstPartyTypeKind.ZodIntersection:
+    case ZodFirstPartyTypeKind.ZodMap:
     case ZodFirstPartyTypeKind.ZodNaN:
     case ZodFirstPartyTypeKind.ZodBigInt:
     case ZodFirstPartyTypeKind.ZodSymbol:
@@ -116,5 +120,3 @@ export const zodOneModelSchema = <T extends ZodRawShape>(
 };
 
 export type { ZodToOneField };
-
-// TODO: Replace strings with constructors
