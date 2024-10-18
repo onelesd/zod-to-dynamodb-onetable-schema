@@ -34,15 +34,22 @@ enum ValidEnum {
 }
 
 const exampleEntitySchema = z.object({
-  string: z.string().default("default-string"),
-  number: z.number().default(3),
-  date: z.date().default(new Date("2020-01-01")),
   array: z.array(z.number()).default([5]),
+  boolean: z.boolean().default(false),
+  date: z.date().default(new Date("2020-01-01")),
   enum: z.enum(["hello", "world"]).default("hello"),
+  literal: z.literal("hello").default("hello"),
   nativeEnum: z.nativeEnum(ValidEnum).default(ValidEnum.DEFAULT),
-  set: z.set(z.string()).default(new Set(["default", "set"])),
-  optional: z.string().optional(),
   nullable: z.string().nullable().default(null),
+  number: z.number().default(3),
+  object: z
+    .object({ foo: z.literal("bar").default("bar") })
+    .default({ foo: "bar" }),
+  optional: z.string().optional(),
+  record: z.record(z.string(), z.number()).default({ test: 9 }),
+  set: z.set(z.string()).default(new Set(["default", "set"])),
+  string: z.string().default("default-string"),
+  tuple: z.tuple([z.string()]).default(["tuple"]),
 });
 
 const exampleModelSchema = exampleEntitySchema.extend({
@@ -112,17 +119,27 @@ describe.each(tableConstructorParams)(
         enum: "world",
         array: [0],
         set: new Set(["hello", "world"]),
+        record: { test: 9 },
+        literal: "hello",
+        object: { foo: "bar" },
+        boolean: true,
         nullable: null,
+        tuple: ["test"],
       };
       await exampleModel.create({
         ...inMemoryExampleEntity,
         nullable: undefined,
       });
-      const exampleRecord = await exampleModel.get({ string: "test" });
+      const exampleRecord = await exampleModel.get(
+        { string: "test" },
+        { hidden: true },
+      );
 
       // Assert
       expect(exampleRecord).toMatchObject(inMemoryExampleEntity);
-      expect(exampleEntitySchema.safeParse(exampleRecord).success).toBe(true);
+      expect(exampleEntitySchema.parse(exampleRecord)).toEqual(
+        inMemoryExampleEntity,
+      );
     });
 
     it("test that upsert is operational relying on defaults", async () => {
@@ -131,9 +148,10 @@ describe.each(tableConstructorParams)(
 
       // Act
       await exampleModel.create({});
-      const exampleRecord = await exampleModel.get({
-        string: "default-string",
-      });
+      const exampleRecord = await exampleModel.get(
+        { string: "default-string" },
+        { hidden: true },
+      );
 
       // Assert
       expect(exampleRecord).toMatchObject({
@@ -145,8 +163,12 @@ describe.each(tableConstructorParams)(
         nativeEnum: ValidEnum.DEFAULT,
         set: new Set(["default", "set"]),
         nullable: null,
+        record: { test: 9 },
+        literal: "hello",
+        object: { foo: "bar" },
+        tuple: ["tuple"],
       });
-      expect(exampleEntitySchema.safeParse(exampleRecord).success).toBe(true);
+      expect(() => exampleEntitySchema.parse(exampleRecord)).not.toThrowError();
     });
   },
 );
