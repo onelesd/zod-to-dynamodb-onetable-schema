@@ -1,4 +1,4 @@
-name: Merge into main checks
+name: Merge and Publish
 on:
   push:
     branches: [main]

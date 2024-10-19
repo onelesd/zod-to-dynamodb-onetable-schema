@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Table } from "dynamodb-onetable";
-import { zodOneModelSchema } from "../src";
+import { zodOneModelSchema } from "../src/zodOneModelSchema";
 import { z } from "zod";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { vi } from "vitest";
@@ -65,27 +65,27 @@ const tableConstructorParams: [
   string,
   TableConstructorParams<typeof schema>,
 ][] = [
-    [
-      "withIsoDates = false",
-      {
-        name: "withIsoDatesFalseTable",
-        client: ClientV3,
-        partial: true,
-        schema: schema,
-        isoDates: true,
-      },
-    ],
-    [
-      "withIsoDates = true",
-      {
-        name: "withIsoDatesTrueTable",
-        client: ClientV3,
-        partial: true,
-        schema: schema,
-        isoDates: true,
-      },
-    ],
-  ];
+  [
+    "withIsoDates = false",
+    {
+      name: "withIsoDatesFalseTable",
+      client: ClientV3,
+      partial: true,
+      schema: schema,
+      isoDates: true,
+    },
+  ],
+  [
+    "withIsoDates = true",
+    {
+      name: "withIsoDatesTrueTable",
+      client: ClientV3,
+      partial: true,
+      schema: schema,
+      isoDates: true,
+    },
+  ],
+];
 
 describe.each(tableConstructorParams)(
   "zodOneModelSchema %s",

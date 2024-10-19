@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { Logger } from "winston";
 import { mock } from "vitest-mock-extended";
-import { zodOneFieldSchema } from "../src";
+import { zodOneFieldSchema } from "../src/zodOneFieldSchema";
 
 const mockLogger = mock<Logger>();
 const mockOpts = { logger: mockLogger };
