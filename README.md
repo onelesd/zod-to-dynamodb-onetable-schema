@@ -19,6 +19,12 @@ Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class 
 
 Enter, `zod`, which excels at providing a flexible schema-building API and [parsing](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) data. This library aims to bridge the two, giving you all the benefits of `dynamodb-onetable` while delegating model schema building and parsing to `zod`, which has proven itself as a capable library for those jobs.
 
+## Install
+
+```sh
+npm i zod-to-dynamodb-onetable-schema
+```
+
 ## Quick start
 
 Say you have an existing 'Account' schema using `zod` in your application code:
