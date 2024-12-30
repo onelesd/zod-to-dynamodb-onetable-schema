@@ -8,7 +8,7 @@ Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class 
 - Convert `zod` _schemas_ into `dynamo-onetable` model field schemas
 - Get dynamic autocomplete as you expect from `dynamo-onetable` via type-fu 🥋
 - Un-representable data-types cause errors, un-representable checks will notify you via `logger.debug` if you provide a Winston instance
-- Zero dependencies - compatible with `zod@^3.23.8` and `dynamo-onetable@^2.7.5`
+- Compatible with `zod@^3.23.8` and `dynamo-onetable@^2.7.5`
 
 ## Rationale
 
