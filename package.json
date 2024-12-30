@@ -1,6 +1,6 @@
 {
   "name": "zod-to-dynamodb-onetable-schema",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auto-generate `dynamodb-onetable` model schemas using `zod`, with best-in-class autocomplete",
   "keywords": [
     "dynamo",
@@ -44,7 +44,6 @@
     "@vitest/coverage-v8": "2.1.2",
     "aws-lambda": "^1.0.7",
     "dynamo-db-local": "^9.2.1",
-    "dynamodb-onetable": "^2.7.5",
     "eslint": "^9.12.0",
     "globals": "^15.11.0",
     "typescript": "^5.6.2",
@@ -52,7 +51,10 @@
     "vitest": "^2.1.2",
     "vitest-mock-extended": "^2.0.2",
     "wait-port": "^1.1.0",
-    "winston": "^3.15.0",
+    "winston": "^3.15.0"
+  },
+  "dependencies": {
+    "dynamodb-onetable": "^2.7.5",
     "zod": "^3.23.8"
   }
 }
